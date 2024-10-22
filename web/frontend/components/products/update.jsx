@@ -5,7 +5,7 @@ import { btn } from '../utils/constants.jsx';
 import ProductForm from './form.jsx';
 import './style.css';
 
-export default function Update({ product, stock, collections }) {
+export default function Update({ product, stock, inventory, inventoryId, collections }) {
     const [open, setOpen] = useState(false);
     const [toastActive, setToastActive] = useState(false);
 
@@ -16,7 +16,7 @@ export default function Update({ product, stock, collections }) {
         <Toast content="Product updated successfully" onDismiss={toggleToastActive} />
     ) : null;
 
-    const handleSubmit = async (updatedProductData) => {
+    const handleSubmit = async (updatedProductData, updatedInventoryData) => {
         const response = await fetch(`/api/products/${product.id.split("/").pop()}`, {
             method: 'PUT',
             headers: {
@@ -25,9 +25,21 @@ export default function Update({ product, stock, collections }) {
             body: JSON.stringify(updatedProductData),
         });
 
+        // const inventoryResponse = await fetch(`/api/inventorylevel/${inventoryId}`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(updatedInventoryData),
+        // });
+
         if (!response.ok) {
             throw new Error(`Error updating product: ${response.statusText}`);
         }
+
+        // if (!inventoryResponse.ok) {
+        //     throw new Error(`Error updating inventory: ${inventoryResponse.statusText}`);
+        // }
 
         setToastActive(true);
         handleToggle();
@@ -54,6 +66,8 @@ export default function Update({ product, stock, collections }) {
                             <ProductForm
                                 product={product}
                                 stock={stock}
+                                inventory={inventory}
+                                inventoryId={inventoryId}
                                 collections={collections}
                                 onSubmit={handleSubmit}
                                 onCancel={handleToggle}

@@ -3,7 +3,7 @@ import { CancelMinor, SendMajor } from '@shopify/polaris-icons';
 import { useCallback, useEffect, useState } from 'react';
 import { checkboxCss, statusOptions } from '../utils/constants.jsx';
 
-export default function ProductForm({ product, stock, collections, onSubmit, onCancel }) {
+export default function ProductForm({ product, stock, inventory, inventoryId, collections, onSubmit, onCancel }) {
     const [selectedStatusOptions, setSelectedStatusOptions] = useState([]);
 
     const [selectedCollectionIds, setSelectedCollectionIds] = useState(
@@ -97,8 +97,14 @@ export default function ProductForm({ product, stock, collections, onSubmit, onC
                 },
             });
 
+            // const inventoryResponse = await onSubmit({
+            //     inventory_item_id: inventoryId,
+            //     available: parseInt(formData.stock, 10),
+            //     locationId: inventory.location_id,
+            // });
+
             if (response) {
-                console.log('API Response:', response.body.product);
+                console.log('API Response:', response);
             } else {
                 console.error('No response from API');
             }

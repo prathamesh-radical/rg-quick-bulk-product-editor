@@ -10,6 +10,7 @@ export default function RowMarkup({ product, cursor, index, inventory, collectio
     const id = product?.variants?.edges[0]?.node?.inventoryItem?.id.split("/").pop().trim() || 0;
     const productInventory = inventory.find(item => item.inventory_item_id.toString().trim() === id);
     const stock = productInventory?.available !== undefined ? productInventory.available : "out of stock";
+    const inventoryId = productInventory?.inventory_item_id;
     const price = product?.variants?.edges[0]?.node?.price || "-";
     const collection = product?.collections?.edges?.map((collect) => (collect.node.title)).join(", ") || "-";
     const imageUrl = product?.featuredImage?.originalSrc || "No Image Available";
@@ -54,7 +55,13 @@ export default function RowMarkup({ product, cursor, index, inventory, collectio
             </IndexTable.Row>
             <tr>
                 <td colSpan="6">
-                    <Update product={product} stock={stock} collections={collections} />
+                    <Update
+                        product={product}
+                        stock={stock}
+                        inventoryId={inventoryId}
+                        inventory={productInventory}
+                        collections={collections}
+                    />
                 </td>
             </tr>
         </>

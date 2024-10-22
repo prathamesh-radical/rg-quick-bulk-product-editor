@@ -297,8 +297,8 @@ app.get('/api/inventorylevel', async (req, res) => {
   }
 });
 
-app.put('/api/inventorylevel/:inventoryItemId', async (req, res) => {
-  const inventoryItemId = req.params.inventoryItemId;
+app.put('/api/inventorylevel/:id', async (req, res) => {
+  const inventoryItemId = req.params.id;
   const { available, locationId } = req.body;
 
   const client = new shopify.api.clients.Rest({
@@ -307,7 +307,7 @@ app.put('/api/inventorylevel/:inventoryItemId', async (req, res) => {
 
   try {
       const updatedInventoryLevel = await client.put({
-          path: `inventory_levels/set`,
+          path: 'inventory_levels/set',
           data: {
               inventory_item_id: inventoryItemId,
               available: available,

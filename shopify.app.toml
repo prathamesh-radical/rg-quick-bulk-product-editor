@@ -3,7 +3,7 @@
 client_id = "d3e078004acc95fe018f6db932904d58"
 name = "rg-products-quick-editor"
 handle = "rg-products-quick-editor"
-application_url = "https://invisible-newspapers-portraits-nasa.trycloudflare.com"
+application_url = "https://extensions-internship-cards-server.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_inventory,read_locations,read_orders,read_products,write_inventor
 
 [auth]
 redirect_urls = [
-  "https://invisible-newspapers-portraits-nasa.trycloudflare.com/auth/callback",
-  "https://invisible-newspapers-portraits-nasa.trycloudflare.com/auth/shopify/callback",
-  "https://invisible-newspapers-portraits-nasa.trycloudflare.com/api/auth/callback"
+  "https://extensions-internship-cards-server.trycloudflare.com/auth/callback",
+  "https://extensions-internship-cards-server.trycloudflare.com/auth/shopify/callback",
+  "https://extensions-internship-cards-server.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
