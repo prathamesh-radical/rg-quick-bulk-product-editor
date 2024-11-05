@@ -8,6 +8,28 @@ export default function Productlists() {
     const {
         tabs, filters, selected, queryValue, sortOptions, sortSelected, filteredProducts, appliedFilters, rowMarkup,  primaryAction, selectedResources, allResourcesSelected, isLoading, setSortSelected, setSelected, onCreateNewView, setQueryValue, onHandleCancel, handleSelectionChange, handleFiltersQueryChange, handleFiltersClearAll
     } = useProductlists();
+
+    const isHeaderCheckboxSelected = allResourcesSelected || selectedResources.length > 0;
+
+    const handleHeaderSelectionChange = (selected) => {
+        if (selected) {
+            handleSelectionChange(filteredProducts.map(product => product.node.id));
+        } else {
+            handleSelectionChange([]);
+        }
+    };
+
+    const dynamicHeadings = isHeaderCheckboxSelected
+    ? [{ title: `${selectedResources.length} selected` }]
+    : heading;
+
+    const handleRowSelectionChange = (id) => {
+        const newSelectedResources = selectedResources.includes(id)
+            ? selectedResources.filter(resourceId => resourceId !== id)
+            : [...selectedResources, id];
+
+        handleSelectionChange(newSelectedResources);
+    };
     
 
     return (
@@ -49,9 +71,15 @@ export default function Productlists() {
                             itemCount={filteredProducts?.length || 0}
                             selectedItemsCount={allResourcesSelected ? "All" : selectedResources.length}
                             onSelectionChange={handleSelectionChange}
-                            headings={heading}
+                            headings={dynamicHeadings}
+                            onHeaderSelectionChange={handleHeaderSelectionChange}
                         >
-                            {rowMarkup}
+                            {rowMarkup.map((rowMarkup, index) => {
+                                return React.cloneElement(rowMarkup, {
+                                    onSelect: () => handleRowSelectionChange(filteredProducts[index].node.id),
+                                    selected: selectedResources.includes(filteredProducts[index].node.id)
+                                });
+                            })}
                         </IndexTable>
                     )}
                 </LegacyCard>

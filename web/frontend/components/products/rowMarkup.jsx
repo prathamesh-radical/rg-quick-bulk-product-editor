@@ -4,7 +4,7 @@ import React from "react";
 import './style.css';
 import Update from "./update.jsx";
 
-export default function RowMarkup({ product, cursor, index, inventory, collections, selected, onSelect }) {
+export default function RowMarkup({ product, productsId, index, inventory, collections, selected, onSelect }) {
     const title = product?.title || "-";
     const status =  product?.status || "-";
     const id = product?.variants?.edges[0]?.node?.inventoryItem?.id.split("/").pop().trim() || 0;
@@ -28,8 +28,8 @@ export default function RowMarkup({ product, cursor, index, inventory, collectio
     return (
         <>
             <IndexTable.Row
-                id={cursor}
-                key={cursor}
+                id={productsId}
+                key={productsId}
                 selected={selected}
                 position={index}
                 onClick={onSelect}

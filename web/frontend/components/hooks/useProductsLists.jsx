@@ -208,7 +208,12 @@ export default function useProductlists() {
         setFilteredProducts(filtered);
     };
 
-    const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(filteredProducts);
+    const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(
+        filteredProducts,
+        {
+            resourceIDResolver: (product) => product.node.id,
+        }
+    );
     const handleFiltersQueryChange = useCallback((value) => setQueryValue(value), []);
 
     const tabs = itemStrings.map((item, index) => ({
@@ -384,16 +389,16 @@ export default function useProductlists() {
         });
     }
 
-    const rowMarkup = filteredProducts.map(({ node: product, cursor }, index) => (
+    const rowMarkup = filteredProducts.map(({ node: product }, index) => (
         <RowMarkup
-            key={product.id || cursor || index}
+            key={product.id}
             product={product}
-            cursor={cursor}
+            productsId={product.id}
             index={index}
             inventory={fetchedInventory}
             collections={fetchedCollections}
-            selected={selectedResources.includes(cursor)}
-            onSelect={() => handleSelectionChange(cursor)}
+            selected={selectedResources.includes(product.id)}
+            onSelect={() => handleSelectionChange(product.id)}
         />
     ));
 
