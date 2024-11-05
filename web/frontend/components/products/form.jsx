@@ -22,6 +22,7 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
         tags: product.tags.join(', ') || "",
     });
     const [inputStatusValue, setInputStatusValue] = useState(formData.status);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setSelectedCollectionIds(product.collections.edges.map(collection => collection.node.id));
@@ -76,6 +77,8 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
         const productId = product.id.split("/").pop();
         const variantId = product.variants.edges[0]?.node.id.split("/").pop();
 
+        setLoading(true);
+
         try {
             const response = await onSubmit({
                 product: {
@@ -110,6 +113,8 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
             }
         } catch (error) {
             console.error('Error updating product:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -197,7 +202,7 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
                 </div>
             </div>
             <ButtonGroup>
-                <Button icon={SendMajor} primary submit>Update</Button>
+                <Button icon={SendMajor} loading={loading} primary submit>Update</Button>
                 <Button icon={CancelMinor} onClick={onCancel} reset monochrome>Cancel</Button>
             </ButtonGroup>
         </Form>

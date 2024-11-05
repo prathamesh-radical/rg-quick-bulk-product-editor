@@ -1,11 +1,13 @@
-import { Frame, IndexFilters, IndexTable, LegacyCard, useBreakpoints, useSetIndexFiltersMode } from "@shopify/polaris";
+import { Frame, IndexFilters, IndexTable, LegacyCard, Spinner, useSetIndexFiltersMode } from "@shopify/polaris";
 import React from "react";
 import useProductlists from "../components/hooks/useProductsLists.jsx";
 import { heading, resourceName } from "../components/utils/constants.jsx";
 
 export default function Productlists() {
     const { mode, setMode } = useSetIndexFiltersMode();
-    const {tabs, filters, selected, queryValue, sortOptions, sortSelected, filteredProducts, appliedFilters, rowMarkup,  primaryAction, selectedResources, allResourcesSelected, setSortSelected, setSelected, onCreateNewView, setQueryValue, onHandleCancel, handleSelectionChange, handleFiltersQueryChange, handleFiltersClearAll} = useProductlists();
+    const {
+        tabs, filters, selected, queryValue, sortOptions, sortSelected, filteredProducts, appliedFilters, rowMarkup,  primaryAction, selectedResources, allResourcesSelected, isLoading, setSortSelected, setSelected, onCreateNewView, setQueryValue, onHandleCancel, handleSelectionChange, handleFiltersQueryChange, handleFiltersClearAll
+    } = useProductlists();
     
 
     return (
@@ -37,16 +39,21 @@ export default function Productlists() {
                         mode={mode}
                         setMode={setMode}
                     />
-                    <IndexTable
-                        condensed={useBreakpoints().smDown}
-                        resourceName={resourceName}
-                        itemCount={filteredProducts?.length || 0}
-                        selectedItemsCount={allResourcesSelected ? "All" : selectedResources.length}
-                        onSelectionChange={handleSelectionChange}
-                        headings={heading}
-                    >
-                        {rowMarkup}
-                    </IndexTable>
+                    {isLoading ? (
+                        <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
+                            <Spinner accessibilityLabel="Loading products" size="large" />
+                        </div>
+                    ) : (
+                        <IndexTable
+                            resourceName={resourceName}
+                            itemCount={filteredProducts?.length || 0}
+                            selectedItemsCount={allResourcesSelected ? "All" : selectedResources.length}
+                            onSelectionChange={handleSelectionChange}
+                            headings={heading}
+                        >
+                            {rowMarkup}
+                        </IndexTable>
+                    )}
                 </LegacyCard>
             </Frame>
         </div>

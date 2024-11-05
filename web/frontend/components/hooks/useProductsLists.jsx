@@ -5,9 +5,10 @@ import { sortOptions } from "../utils/constants.jsx";
 import useFetchData from "./useFetchData.jsx";
 
 export default function useProductlists() {
-    const { data: fetchedProducts } = useFetchData('/api/products');
-    const { data: fetchedCollections } = useFetchData('/api/collections');
-    const { data: fetchedInventory } = useFetchData('/api/inventorylevel');
+    const { data: fetchedProducts, loading: loadingProducts } = useFetchData('/api/products');
+    const { data: fetchedCollections, loading: loadingCollections } = useFetchData('/api/collections');
+    const { data: fetchedInventory, loading: loadingInventory } = useFetchData('/api/inventorylevel');
+    const isLoading = loadingProducts || loadingCollections || loadingInventory;
 
     const [sortSelected, setSortSelected] = useState(['title asc']);
     const [products, setProducts] = useState(fetchedProducts);
@@ -396,5 +397,7 @@ export default function useProductlists() {
         />
     ));
 
-    return {tabs, filters, selected, queryValue, sortOptions, sortSelected, filteredProducts, appliedFilters, rowMarkup, primaryAction, selectedResources, allResourcesSelected, setSortSelected, setSelected, onCreateNewView, setQueryValue, onHandleCancel, handleSelectionChange, handleFiltersQueryChange, handleFiltersClearAll};
+    return {
+        tabs, filters, selected, queryValue, sortOptions, sortSelected, filteredProducts, appliedFilters, rowMarkup, primaryAction, selectedResources, allResourcesSelected, isLoading, setSortSelected, setSelected, onCreateNewView, setQueryValue, onHandleCancel, handleSelectionChange, handleFiltersQueryChange, handleFiltersClearAll
+    };
 }
