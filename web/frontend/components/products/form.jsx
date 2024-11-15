@@ -73,14 +73,14 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+    
         const productId = product.id.split("/").pop();
         const variantId = product.variants.edges[0]?.node.id.split("/").pop();
-
+    
         setLoading(true);
-
+    
         try {
-            const response = await onSubmit({
+            await onSubmit({
                 product: {
                     id: productId,
                     title: formData.title,
@@ -97,20 +97,13 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
                     })),
                     tags: formData.tags.split(',').map(tag => tag.trim()),
                     status: inputStatusValue.toLowerCase(),
-                },
-            });
-
-            // const inventoryResponse = await onSubmit({
+                }
+            }, //{
             //     inventory_item_id: inventoryId,
             //     available: parseInt(formData.stock, 10),
             //     locationId: inventory.location_id,
-            // });
-
-            if (response) {
-                console.log('API Response:', response);
-            } else {
-                console.error('No response from API');
-            }
+            // }
+            );
         } catch (error) {
             console.error('Error updating product:', error);
         } finally {
@@ -159,28 +152,28 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
                     <Text as="p" fontWeight="bold">Product Data</Text>
                     <TextField
                         label="SKU"
-                        type="text"
+                        type="number"
                         value={formData.sku}
                         onChange={handleChange('sku')}
                         fullWidth
                     />
                     <TextField
                         label="Price"
-                        type="text"
+                        type="number"
                         value={formData.price}
                         onChange={handleChange('price')}
                         fullWidth
                     />
                     <TextField
                         label="Sale Price"
-                        type="text"
+                        type="number"
                         value={formData.salePrice}
                         onChange={handleChange('salePrice')}
                         fullWidth
                     />
                     <TextField
                         label="Stock"
-                        type="text"
+                        type="number"
                         value={formData.stock}
                         onChange={handleChange('stock')}
                         fullWidth

@@ -1,11 +1,11 @@
 import { ChoiceList, useIndexResourceState } from "@shopify/polaris";
 import React, { useCallback, useEffect, useState } from "react";
 import RowMarkup from "../products/rowMarkup.jsx";
-import { sortOptions } from "../utils/constants.jsx";
 import useFetchData from "./useFetchData.jsx";
 
 export default function useProductlists() {
     const { data: fetchedProducts, loading: loadingProducts } = useFetchData('/api/products');
+    const { data: fetchedProduct, loading: loadingProduct } = useFetchData('/api/product');
     const { data: fetchedCollections, loading: loadingCollections } = useFetchData('/api/collections');
     const { data: fetchedInventory, loading: loadingInventory } = useFetchData('/api/inventorylevel');
     const isLoading = loadingProducts || loadingCollections || loadingInventory;
@@ -22,6 +22,24 @@ export default function useProductlists() {
     const [selectedGiftCard, setSelectedGiftCard] = useState(false);
 
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const itemsPerPage = 50;
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalItems = filteredProducts.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    const paginatedProducts = filteredProducts.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handleNextPage = useCallback(() => {
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    }, [totalPages]);
+
+    const handlePreviousPage = useCallback(() => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    }, []);
 
     const handleSelectedCategoryChange = useCallback((value) => {
         setSelectedCategory(value[0]);
@@ -42,18 +60,23 @@ export default function useProductlists() {
     );
 
     useEffect(() => {
-        if (fetchedProducts !== products) {
+        setCurrentPage(1);
+    }, [selected, productStatus, sortSelected, taggedWith, selectedCategory, selectedGiftCard, queryValue]);
+
+
+    useEffect(() => {
+        if (fetchedProducts && fetchedProducts !== products) {
             setProducts(fetchedProducts);
             setFilteredProducts(fetchedProducts);
         }
-    }, [fetchedProducts, products]);
+    }, [fetchedProducts]);
     
 
     useEffect(() => {
         const [sortKey, sortDirection] = sortSelected[0].split(' ');
         const sortedProducts = sortProducts(filteredProducts, sortKey, sortDirection);
         setFilteredProducts(sortedProducts);
-    }, [sortSelected, filteredProducts]);
+    }, [sortSelected]);
 
     useEffect(() => {
         let filtered = [...products];
@@ -108,7 +131,7 @@ export default function useProductlists() {
         } else {
             filterProductsByTab(selected);
         }
-    }, [queryValue, products]);
+    }, [queryValue, selected]);
 
     const deleteView = (index) => {
         const newItemStrings = [...itemStrings];
@@ -209,10 +232,7 @@ export default function useProductlists() {
     };
 
     const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(
-        filteredProducts,
-        {
-            resourceIDResolver: (product) => product.node.id,
-        }
+        paginatedProducts, { resourceIDResolver: (product) => product.node.id,}
     );
     const handleFiltersQueryChange = useCallback((value) => setQueryValue(value), []);
 
@@ -389,11 +409,10 @@ export default function useProductlists() {
         });
     }
 
-    const rowMarkup = filteredProducts.map(({ node: product }, index) => (
+    const rowMarkup = paginatedProducts.map(({ node: product }, index) => (
         <RowMarkup
             key={product.id}
             product={product}
-            productsId={product.id}
             index={index}
             inventory={fetchedInventory}
             collections={fetchedCollections}
@@ -403,6 +422,6 @@ export default function useProductlists() {
     ));
 
     return {
-        tabs, filters, selected, queryValue, sortOptions, sortSelected, filteredProducts, appliedFilters, rowMarkup, primaryAction, selectedResources, allResourcesSelected, isLoading, setSortSelected, setSelected, onCreateNewView, setQueryValue, onHandleCancel, handleSelectionChange, handleFiltersQueryChange, handleFiltersClearAll
+        tabs, filters, currentPage, selected, totalPages, queryValue, sortSelected, appliedFilters, rowMarkup, primaryAction, selectedResources, allResourcesSelected, isLoading, paginatedProducts, handleNextPage, handlePreviousPage, setSortSelected, setSelected, onCreateNewView, setQueryValue, onHandleCancel, handleSelectionChange, handleFiltersQueryChange, handleFiltersClearAll
     };
 }

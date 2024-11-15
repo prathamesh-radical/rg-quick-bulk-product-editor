@@ -26,12 +26,13 @@ export default function useFetchData(apiEndpoint) {
                     console.log("Fetched products by graphql api",data.products);
                 } else if(apiEndpoint === "/api/collections") {
                     setData(data.body.data.collections.edges);
-                    console.log("Fetched collections",data.body.data.collections.edges.edges);
+                    console.log("Fetched collections",data.body.data.collections.edges);
                 } else if(apiEndpoint === "/api/inventorylevel") {
-                    setData(data.data)
+                    setData(data.data);
                     console.log("Fetched inventory",data.data);
+                }else if(apiEndpoint === "/api/product") {
+                    console.log("Fetched products by rest api",data.data);
                 }
-                setData(result);
             } catch (err) {
                 setError(err.message);
             } finally {

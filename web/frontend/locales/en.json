@@ -9,7 +9,7 @@
   },
   "NavigationMenu": {
     "pageName": "Page name",
-    "productsLists": "Products Lists"
+    "products": "Products"
   },
   "NotFound": {
     "description": "Check the URL and try again, or use the search bar to find what you need.",

@@ -10,3 +10,23 @@
 .editBtn {
     background-color: chocolate;
 }
+.title {
+    display: flex;
+    position: relative;
+    gap: 1rem;
+}
+.viewIcon {
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.viewIcon .viewBtn:hover {
+    fill: rgba(0, 91, 211, 1);
+}
+.viewIcon .editBtn:hover {
+    fill: rgba(0, 91, 211, 1);
+}
+.title:hover .viewIcon {
+    opacity: 1;
+}

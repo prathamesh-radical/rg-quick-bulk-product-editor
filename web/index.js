@@ -80,6 +80,21 @@ app.get("/api/products", async (_req, res) => {
                   }
                 }
               }
+              media(first: 10) {
+                edges {
+                  node {
+                    ... on Video {
+                      id
+                      sources {
+                        url
+                        format
+                        height
+                        width
+                      }
+                    }
+                  }
+                }
+              }
               variants(first: 1) {
                 edges {
                   node {
@@ -180,100 +195,13 @@ app.get('/api/collections', async (req, res) => {
   }
 });
 
-app.get('/api/locations', async (req, res) => {
-  const client = new shopify.api.clients.Graphql({
-    session: res.locals.shopify.session,
-  });
-
-  let hasNextPage = true;
-  let endCursor = null;
-  let allLocations = [];
-
-  try {
-    while (hasNextPage) {
-      const response = await client.query({
-        data: `query {
-          locations(first: 10${endCursor ? `, after: "${endCursor}"` : ''}) {
-            edges {
-              node {
-                id
-                name
-                address {
-                  address1
-                  city
-                  country
-                }
-              }
-              cursor
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-            }
-          }
-        }`,
-      });
-
-      const locations = response.body.data.locations.edges;
-      allLocations.push(...locations.map(edge => edge.node));
-
-      hasNextPage = response.body.data.locations.pageInfo.hasNextPage;
-      endCursor = response.body.data.locations.pageInfo.endCursor;
-    }
-
-    res.status(200).json(allLocations);
-  } catch (error) {
-    console.error('Error fetching locations:', error);
-    res.status(500).json({ error: 'Failed to fetch locations' });
-  }
-});
-
-app.get('/api/inventory', async (req, res) => {
-  const client = new shopify.api.clients.Graphql({
-    session: res.locals.shopify.session,
-  });
-
-  let hasNextPage = true;
-  let cursor = null;
-  let allInventory = [];
-
-  try {
-    const inventory = await client.query({
-      data: `query inventoryItems($cursor: String) {
-        inventoryItems(first: 10000, after: $cursor) {
-          edges {
-            node {
-              id
-              tracked
-              sku
-            }
-          }
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-        }
-      }`,
-    });
-
-    const { edges, pageInfo } = inventory.body.data.inventoryItems;
-    allInventory = allInventory.concat(edges.map(edge => edge.node));
-    hasNextPage = pageInfo.hasNextPage;
-    cursor = pageInfo.endCursor;
-
-    res.status(200).json(allInventory);
-  } catch (error) {
-    console.error('Error fetching inventory:', error.response);
-    res.status(500).json({ error: 'Failed to fetch inventory' });
-  }
-});
-
 app.get('/api/product', async (req, res) => {
   const session = res.locals.shopify.session;
 
   try {
     const product = await shopify.api.rest.Product.all({
       session: session,
+      limit: 250,
     });
     res.status(200).json(product);
   } catch (error) {
@@ -289,6 +217,7 @@ app.get('/api/inventorylevel', async (req, res) => {
     const inventoryLevels = await shopify.api.rest.InventoryLevel.all({
       session: session,
       location_ids: "83114426690",
+      limit: 250,
     });
     res.status(200).json(inventoryLevels);
   } catch (error) {

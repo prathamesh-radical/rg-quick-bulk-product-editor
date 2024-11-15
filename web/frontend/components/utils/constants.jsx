@@ -12,23 +12,6 @@ export const heading = [
     { title: 'Category' },
 ];
 
-export const btn = {
-    position: 'relative',
-    left: '10rem',
-    bottom: '0.8rem',
-    width: '100%',
-};
-
-export const checkboxCss = {
-    border: '1px solid #ccc',
-    padding: '0.5rem 1rem',
-    display: 'flex',
-    flexDirection: 'column',
-    maxHeight: '13rem',
-    overflowY: 'auto',
-    borderRadius: '6px',
-};
-
 export const statusOptions = [
     {label: 'Active', value: 'Active'},
     {label: 'Draft', value: 'Draft'},
@@ -47,3 +30,41 @@ export const sortOptions = [
     { label: "Collection", value: "collection asc", directionLabel: 'A-Z' },
     { label: "Collection", value: "collection desc", directionLabel: 'Z-A' },
 ];
+
+// CSS Styling
+
+export const btn = {
+    position: 'relative',
+    left: '9.6rem',
+    bottom: '0.8rem',
+    width: '100%',
+};
+
+export const checkboxCss = {
+    border: '1px solid #ccc',
+    padding: '0.5rem 1rem',
+    display: 'flex',
+    flexDirection: 'column',
+    maxHeight: '13rem',
+    overflowY: 'auto',
+    borderRadius: '6px',
+};
+
+export const spinnerCss = {
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '2rem'
+};
+
+export const paginatedButtonCss = {
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '0.5rem',
+    gap: "0.5rem",
+    backgroundColor: "#F7F7F7",
+};
+
+export const collapsibleFormCss = {
+    marginTop: '1rem',
+    width: '72rem'
+};

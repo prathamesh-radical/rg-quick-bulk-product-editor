@@ -1,67 +1,70 @@
-import { Button, Collapsible, LegacyCard, LegacyStack, Toast } from '@shopify/polaris';
-import { EditMinor } from '@shopify/polaris-icons';
+import { Collapsible, LegacyCard, LegacyStack, Toast } from '@shopify/polaris';
 import { useCallback, useState } from 'react';
-import { btn } from '../utils/constants.jsx';
+import { btn, collapsibleFormCss } from '../utils/constants.jsx';
 import ProductForm from './form.jsx';
 import './style.css';
 
-export default function Update({ product, stock, inventory, inventoryId, collections }) {
-    const [open, setOpen] = useState(false);
+export default function Update({ open, product, stock, inventory, inventoryId, collections, handleToggle }) {
     const [toastActive, setToastActive] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+    const [toastError, setToastError] = useState(false);
 
-    const handleToggle = useCallback(() => setOpen((open) => !open), []);
     const toggleToastActive = useCallback(() => setToastActive((toastActive) => !toastActive), []);
 
     const toastMarkup = toastActive ? (
-        <Toast content="Product updated successfully" onDismiss={toggleToastActive} />
+        <Toast content={toastMessage} error={toastError} onDismiss={toggleToastActive} />
     ) : null;
 
     const handleSubmit = async (updatedProductData, updatedInventoryData) => {
-        const response = await fetch(`/api/products/${product.id.split("/").pop()}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedProductData),
-        });
+        const productId = product.id.split("/").pop();
+        try {
+            const response = await fetch(`/api/products/${productId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedProductData),
+            });
 
-        // const inventoryResponse = await fetch(`/api/inventorylevel/${inventoryId}`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(updatedInventoryData),
-        // });
+            // const inventoryResponse = await fetch(`/api/inventorylevel/${inventoryId}`, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({
+            //         inventory_item_id: inventoryId,
+            //         available: Number(updatedInventoryData.available),
+            //         locationId: updatedInventoryData.locationId,
+            //     }),
+            // });
 
-        if (!response.ok) {
-            throw new Error(`Error updating product: ${response.statusText}`);
+            if (!response.ok) {
+                throw new Error(`Error updating product: ${response.statusText}`);
+            }
+
+            // if (!inventoryResponse.ok) {
+            //     throw new Error(`Error updating inventory: ${inventoryResponse.statusText}`);
+            // }
+
+            setToastMessage("Product updated successfully");
+            setToastError(false);
+            setToastActive(true);
+            handleToggle();
+
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            setToastMessage(error.message || "An error occurred while updating the product");
+            setToastError(true);
+            setToastActive(true);
         }
-
-        // if (!inventoryResponse.ok) {
-        //     throw new Error(`Error updating inventory: ${inventoryResponse.statusText}`);
-        // }
-
-        setToastActive(true);
-        handleToggle();
-
-        const result = await response.json();
-        return result;
     };
 
     return (
         <div style={btn}>
-            <Button
-                icon={EditMinor}
-                ariaExpanded={open}
-                ariaControls="basic-collapsible"
-                onClick={handleToggle}
-                monochrome
-            >
-                Edit
-            </Button>
             <LegacyStack>
                 <Collapsible open={open} id="basic-collapsible" transition={{ duration: '500ms', timingFunction: 'ease-in-out' }} expandOnPrint>
-                    <div style={{ marginTop: '1rem', width: '72rem' }}>
+                    <div style={collapsibleFormCss}>
                         <LegacyCard sectioned>
                             <ProductForm
                                 product={product}
