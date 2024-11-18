@@ -24,13 +24,16 @@
     "vite": "^5.4.8"
   },
   "dependencies": {
+    "@apollo/client": "^3.11.9",
     "@reduxjs/toolkit": "^2.3.0",
     "@remix-run/react": "^2.12.1",
     "@shopify/polaris": "^13.9.0",
     "@shopify/polaris-icons": "^9.3.0",
     "@shopify/shopify-api": "^11.5.0",
+    "@types/express": "^5.0.0",
     "cors": "^2.8.5",
-    "express": "^4.21.0",
+    "express": "^4.21.1",
+    "graphql": "^16.9.0",
     "react-redux": "^9.1.2",
     "redux-thunk": "^3.1.0"
   }

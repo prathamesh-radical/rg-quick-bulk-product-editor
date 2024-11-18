@@ -1,9 +1,9 @@
 import {
-    Button, Frame, IndexFilters, IndexTable, LegacyCard, Spinner, useSetIndexFiltersMode
+    Frame, IndexFilters, IndexTable, LegacyCard, Pagination, Spinner, useSetIndexFiltersMode
 } from "@shopify/polaris";
-import { ChevronLeftMinor, ChevronRightMinor } from "@shopify/polaris-icons";
 import React from "react";
 import useProductlists from "../components/hooks/useProductsLists.jsx";
+import "../components/products/style.css";
 import {
     heading, paginatedButtonCss, resourceName, sortOptions, spinnerCss
 } from "../components/utils/constants.jsx";
@@ -73,45 +73,39 @@ export default function Products() {
                             <Spinner accessibilityLabel="Loading products" size="large" />
                         </div>
                     ) : (
-                        <IndexTable
-                            resourceName={resourceName}
-                            itemCount={paginatedProducts?.length || 0}
-                            selectedItemsCount={allResourcesSelected ? "All" : selectedResources.length}
-                            onSelectionChange={handleSelectionChange}
-                            headings={dynamicHeadings}
-                            onHeaderSelectionChange={handleHeaderSelectionChange}
-                            pagination={{
-                                hasNext: currentPage < totalPages,
-                                hasPrevious: currentPage > 1,
-                                onNext: handleNextPage,
-                                onPrevious: handlePreviousPage,
-                            }}
-                        >
-                            {rowMarkup.map((rowMarkup, index) => {
-                                return React.cloneElement(rowMarkup, {
-                                    onSelect: () => handleRowSelectionChange(paginatedProducts[index].node.id),
-                                    selected: selectedResources.includes(paginatedProducts[index].node.id)
-                                });
-                            })}
-                            <tr>
-                                <td colSpan="7">
-                                    <div style={paginatedButtonCss}>
-                                        <Button
-                                            icon={ChevronLeftMinor}
-                                            onClick={handlePreviousPage}
-                                            disabled={currentPage <= 1}
-                                            size="slim"
-                                        />
-                                        <Button
-                                            icon={ChevronRightMinor}
-                                            onClick={handleNextPage}
-                                            disabled={currentPage === totalPages}
-                                            size="slim"
-                                        />
-                                    </div>
-                                </td>
-                            </tr>
-                        </IndexTable>
+                        <>
+                            <IndexTable
+                                resourceName={resourceName}
+                                itemCount={paginatedProducts?.length || 0}
+                                selectedItemsCount={allResourcesSelected ? "All" : selectedResources.length}
+                                onSelectionChange={handleSelectionChange}
+                                headings={dynamicHeadings}
+                                onHeaderSelectionChange={handleHeaderSelectionChange}
+                                pagination={{
+                                    hasNext: currentPage < totalPages,
+                                    hasPrevious: currentPage > 1,
+                                    onNext: handleNextPage,
+                                    onPrevious: handlePreviousPage,
+                                }}
+                            >
+                                {rowMarkup.map((rowMarkup, index) => {
+                                    return React.cloneElement(rowMarkup, {
+                                        onSelect: () => handleRowSelectionChange(paginatedProducts[index].node.id),
+                                        selected: selectedResources.includes(paginatedProducts[index].node.id)
+                                    });
+                                })}
+                            </IndexTable>
+                            <div style={paginatedButtonCss}>
+                                <Pagination
+                                    hasPrevious={currentPage > 1}
+                                    onPrevious={() => handlePreviousPage()}
+                                    hasNext={currentPage < totalPages}
+                                    onNext={() => handleNextPage()}
+                                    type="table"
+                                    label={`${currentPage} of ${totalPages}`}
+                                />
+                            </div>
+                        </>
                     )}
                 </LegacyCard>
             </Frame>

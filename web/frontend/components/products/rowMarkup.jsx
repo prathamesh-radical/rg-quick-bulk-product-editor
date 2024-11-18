@@ -4,7 +4,7 @@ import React, { useCallback, useState } from "react";
 import './style.css';
 import Update from "./update.jsx";
 
-export default function RowMarkup({ product, index, inventory, collections, selected, onSelect }) {
+export default function RowMarkup({ product, domain, index, inventory, collections, selected, onSelect }) {
     const [open, setOpen] = useState(false);
 
     const title = product?.title || "-";
@@ -28,8 +28,8 @@ export default function RowMarkup({ product, index, inventory, collections, sele
         stat = "success";
     } else if(status === "DRAFT") {
         stat = "info";
-    } else if(status === "INACTIVE") {
-        stat = "attention";
+    } else if(status === "ARCHIVED") {
+        stat = null;
     }
 
     const handleToggle = useCallback(() => setOpen((open) => !open), []);
@@ -59,7 +59,7 @@ export default function RowMarkup({ product, index, inventory, collections, sele
                         <Tooltip content="Preview on Online Store">
                             <a
                                 className="viewBtn"
-                                href={`https://themedemo1003.myshopify.com/products/${handle}`}
+                                href={`https://${domain}/products/${handle}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="Preview on Online Store"

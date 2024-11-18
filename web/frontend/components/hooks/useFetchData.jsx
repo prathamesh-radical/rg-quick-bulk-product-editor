@@ -30,7 +30,10 @@ export default function useFetchData(apiEndpoint) {
                 } else if(apiEndpoint === "/api/inventorylevel") {
                     setData(data.data);
                     console.log("Fetched inventory",data.data);
-                }else if(apiEndpoint === "/api/product") {
+                } else if(apiEndpoint === "/api/domain") {
+                    setData(data.domain);
+                    console.log("Fetched domain",data.domain);
+                } else if(apiEndpoint === "/api/product") {
                     console.log("Fetched products by rest api",data.data);
                 }
             } catch (err) {

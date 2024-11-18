@@ -57,11 +57,19 @@ export const spinnerCss = {
 };
 
 export const paginatedButtonCss = {
-    display: 'flex',
-    justifyContent: 'center',
-    padding: '0.5rem',
-    gap: "0.5rem",
+    position: "sticky",
+    bottom: 0,
+    left: 0,
+    width: "100%",
     backgroundColor: "#F7F7F7",
+    display: "flex",
+    justifyContent: "center",
+    padding: "0.5rem 0",
+    zIndex: 1000,
+    borderTop: "1px solid #DDE0E4",
+    borderBottom: "1px solid #DDE0E4",
+    borderBottomLeftRadius: "8px",
+    borderBottomRightRadius: "8px",
 };
 
 export const collapsibleFormCss = {

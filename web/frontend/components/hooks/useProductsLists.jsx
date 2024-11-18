@@ -4,11 +4,12 @@ import RowMarkup from "../products/rowMarkup.jsx";
 import useFetchData from "./useFetchData.jsx";
 
 export default function useProductlists() {
+    const { data: fetchedShop, loading: loadingShop } = useFetchData('/api/domain');
     const { data: fetchedProducts, loading: loadingProducts } = useFetchData('/api/products');
     const { data: fetchedProduct, loading: loadingProduct } = useFetchData('/api/product');
     const { data: fetchedCollections, loading: loadingCollections } = useFetchData('/api/collections');
     const { data: fetchedInventory, loading: loadingInventory } = useFetchData('/api/inventorylevel');
-    const isLoading = loadingProducts || loadingCollections || loadingInventory;
+    const isLoading = loadingProducts || loadingCollections || loadingInventory || loadingShop;
 
     const [sortSelected, setSortSelected] = useState(['title asc']);
     const [products, setProducts] = useState(fetchedProducts);
@@ -414,6 +415,7 @@ export default function useProductlists() {
             key={product.id}
             product={product}
             index={index}
+            domain={fetchedShop}
             inventory={fetchedInventory}
             collections={fetchedCollections}
             selected={selectedResources.includes(product.id)}

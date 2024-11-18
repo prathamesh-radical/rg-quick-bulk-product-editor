@@ -39,6 +39,20 @@ app.use("/api/*", shopify.validateAuthenticatedSession());
 app.use(express.json());
 
 // Add this after the existing product count endpoint
+app.get('/api/domain', async (req, res) => {
+  try {
+    const session = res.locals.shopify.session;
+    if (session && session.shop) {
+      res.status(200).json({ domain: session.shop });
+    } else {
+      res.status(404).json({ error: 'Session not found or invalid' });
+    }
+  } catch (error) {
+    console.error('Error retrieving myShopifyDomain:', error);
+    res.status(500).json({ error: 'Failed to retrieve myShopifyDomain' });
+  }
+});
+
 app.get("/api/products", async (_req, res) => {
   const client = new shopify.api.clients.Graphql({
     session: res.locals.shopify.session,
