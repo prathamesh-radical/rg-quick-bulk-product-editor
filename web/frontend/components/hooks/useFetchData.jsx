@@ -23,7 +23,7 @@ export default function useFetchData(apiEndpoint) {
 
                 if(apiEndpoint === "/api/products") {
                     setData(data.products);
-                    console.log("Fetched products by graphql api",data.products);
+                    console.log("Fetched products",data.products);
                 } else if(apiEndpoint === "/api/collections") {
                     setData(data.body.data.collections.edges);
                     console.log("Fetched collections",data.body.data.collections.edges);
@@ -33,8 +33,6 @@ export default function useFetchData(apiEndpoint) {
                 } else if(apiEndpoint === "/api/domain") {
                     setData(data.domain);
                     console.log("Fetched domain",data.domain);
-                } else if(apiEndpoint === "/api/product") {
-                    console.log("Fetched products by rest api",data.data);
                 }
             } catch (err) {
                 setError(err.message);

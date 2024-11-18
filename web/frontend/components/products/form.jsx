@@ -1,32 +1,22 @@
-import { Autocomplete, Button, ButtonGroup, Checkbox, Form, Text, TextField } from '@shopify/polaris';
+import { Autocomplete, Button, ButtonGroup, Form, Text, TextField } from '@shopify/polaris';
 import { CancelMinor, SendMajor } from '@shopify/polaris-icons';
-import { useCallback, useEffect, useState } from 'react';
-import { checkboxCss, statusOptions } from '../utils/constants.jsx';
+import { useCallback, useState } from 'react';
+import { statusOptions } from '../utils/constants.jsx';
 
-export default function ProductForm({ product, stock, inventory, inventoryId, collections, onSubmit, onCancel }) {
+export default function ProductForm({ product, onSubmit, onCancel }) {
     const [selectedStatusOptions, setSelectedStatusOptions] = useState([]);
-
-    const [selectedCollectionIds, setSelectedCollectionIds] = useState(
-        product.collections.edges.map(collection => collection.node.id)
-    );
 
     const [formData, setFormData] = useState({
         title: product.title,
         slug: product.handle,
         status: product.status,
-        stock: stock,
         sku: product.variants.edges[0]?.node.sku || "-",
         salePrice: product.variants.edges[0]?.node.price || "-",
         price: product.variants.edges[0]?.node.compareAtPrice || "-",
-        collection: product.collections.edges.map(collection => collection.node.title).join(', '),
         tags: product.tags.join(', ') || "",
     });
     const [inputStatusValue, setInputStatusValue] = useState(formData.status);
     const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        setSelectedCollectionIds(product.collections.edges.map(collection => collection.node.id));
-    }, [product]);
 
     const handleChange = (field) => (value) => {
         setFormData({ ...formData, [field]: value });
@@ -61,16 +51,6 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
         [statusOptions],
     );
 
-    const handleCollectionChange = (collectionId) => {
-        setSelectedCollectionIds((prevSelected) => {
-            if (prevSelected.includes(collectionId)) {
-                return prevSelected.filter(id => id !== collectionId);
-            } else {
-                return [...prevSelected, collectionId];
-            }
-        });
-    };
-
     const handleSubmit = async (event) => {
         event.preventDefault();
     
@@ -98,12 +78,7 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
                     tags: formData.tags.split(',').map(tag => tag.trim()),
                     status: inputStatusValue.toLowerCase(),
                 }
-            }, //{
-            //     inventory_item_id: inventoryId,
-            //     available: parseInt(formData.stock, 10),
-            //     locationId: inventory.location_id,
-            // }
-            );
+            });
         } catch (error) {
             console.error('Error updating product:', error);
         } finally {
@@ -138,12 +113,10 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
                         textField={statusTextField}
                     />
                     <TextField
-                        label="Product Tags"
-                        type="text"
-                        value={formData.tags}
-                        onChange={handleChange('tags')}
-                        helpText='Separate tags with commas'
-                        multiline
+                        label="SKU"
+                        type="number"
+                        value={formData.sku}
+                        onChange={handleChange('sku')}
                         fullWidth
                     />
                 </div>
@@ -151,10 +124,12 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <Text as="p" fontWeight="bold">Product Data</Text>
                     <TextField
-                        label="SKU"
-                        type="number"
-                        value={formData.sku}
-                        onChange={handleChange('sku')}
+                        label="Product Tags"
+                        type="text"
+                        value={formData.tags}
+                        onChange={handleChange('tags')}
+                        helpText='Separate tags with commas'
+                        multiline
                         fullWidth
                     />
                     <TextField
@@ -171,27 +146,6 @@ export default function ProductForm({ product, stock, inventory, inventoryId, co
                         onChange={handleChange('salePrice')}
                         fullWidth
                     />
-                    <TextField
-                        label="Stock"
-                        type="number"
-                        value={formData.stock}
-                        onChange={handleChange('stock')}
-                        fullWidth
-                    />
-                </div>
-                {/* Column 3: Product Category */}
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <Text as='p'>Product Category</Text>
-                    <div style={checkboxCss}>
-                        {collections.map((collection) => (
-                            <Checkbox
-                                key={collection.node.id}
-                                label={collection.node.title}
-                                checked={selectedCollectionIds.includes(collection.node.id)}
-                                onChange={() => handleCollectionChange(collection.node.id)}
-                            />
-                        ))}
-                    </div>
                 </div>
             </div>
             <ButtonGroup>

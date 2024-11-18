@@ -209,21 +209,6 @@ app.get('/api/collections', async (req, res) => {
   }
 });
 
-app.get('/api/product', async (req, res) => {
-  const session = res.locals.shopify.session;
-
-  try {
-    const product = await shopify.api.rest.Product.all({
-      session: session,
-      limit: 250,
-    });
-    res.status(200).json(product);
-  } catch (error) {
-    console.error('Error fetching product:', error.response);
-    res.status(500).json({ error: 'Failed to fetch product' });
-  }
-});
-
 app.get('/api/inventorylevel', async (req, res) => {
   const session = res.locals.shopify.session;
 

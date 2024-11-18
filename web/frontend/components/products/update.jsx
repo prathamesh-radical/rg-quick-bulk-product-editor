@@ -4,7 +4,7 @@ import { btn, collapsibleFormCss } from '../utils/constants.jsx';
 import ProductForm from './form.jsx';
 import './style.css';
 
-export default function Update({ open, product, stock, inventory, inventoryId, collections, handleToggle }) {
+export default function Update({ open, product, handleToggle }) {
     const [toastActive, setToastActive] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
     const [toastError, setToastError] = useState(false);
@@ -15,7 +15,7 @@ export default function Update({ open, product, stock, inventory, inventoryId, c
         <Toast content={toastMessage} error={toastError} onDismiss={toggleToastActive} />
     ) : null;
 
-    const handleSubmit = async (updatedProductData, updatedInventoryData) => {
+    const handleSubmit = async (updatedData,) => {
         const productId = product.id.split("/").pop();
         try {
             const response = await fetch(`/api/products/${productId}`, {
@@ -23,28 +23,12 @@ export default function Update({ open, product, stock, inventory, inventoryId, c
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(updatedProductData),
+                body: JSON.stringify(updatedData),
             });
-
-            // const inventoryResponse = await fetch(`/api/inventorylevel/${inventoryId}`, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //         inventory_item_id: inventoryId,
-            //         available: Number(updatedInventoryData.available),
-            //         locationId: updatedInventoryData.locationId,
-            //     }),
-            // });
 
             if (!response.ok) {
                 throw new Error(`Error updating product: ${response.statusText}`);
             }
-
-            // if (!inventoryResponse.ok) {
-            //     throw new Error(`Error updating inventory: ${inventoryResponse.statusText}`);
-            // }
 
             setToastMessage("Product updated successfully");
             setToastError(false);
@@ -68,10 +52,6 @@ export default function Update({ open, product, stock, inventory, inventoryId, c
                         <LegacyCard sectioned>
                             <ProductForm
                                 product={product}
-                                stock={stock}
-                                inventory={inventory}
-                                inventoryId={inventoryId}
-                                collections={collections}
                                 onSubmit={handleSubmit}
                                 onCancel={handleToggle}
                             />
