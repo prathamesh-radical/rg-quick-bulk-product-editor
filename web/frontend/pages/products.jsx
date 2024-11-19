@@ -2,7 +2,6 @@ import {
     Frame, IndexFilters, IndexTable, LegacyCard, Pagination, Spinner, useSetIndexFiltersMode
 } from "@shopify/polaris";
 import React, { useContext } from "react";
-// import useProductlists from "../components/hooks/useProductsLists.jsx";
 import { ProductContext } from "../components/context/ProductContext.jsx";
 import "../components/products/style.css";
 import {
