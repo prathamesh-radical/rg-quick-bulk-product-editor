@@ -1,8 +1,9 @@
 import {
     Frame, IndexFilters, IndexTable, LegacyCard, Pagination, Spinner, useSetIndexFiltersMode
 } from "@shopify/polaris";
-import React from "react";
-import useProductlists from "../components/hooks/useProductsLists.jsx";
+import React, { useContext } from "react";
+// import useProductlists from "../components/hooks/useProductsLists.jsx";
+import { ProductContext } from "../components/context/ProductContext.jsx";
 import "../components/products/style.css";
 import {
     heading, paginatedButtonCss, resourceName, sortOptions, spinnerCss
@@ -15,7 +16,7 @@ export default function Products() {
         primaryAction, selectedResources, allResourcesSelected, isLoading, paginatedProducts,
         handlePreviousPage, handleNextPage, setSortSelected, setSelected, onCreateNewView,
         setQueryValue, onHandleCancel, handleSelectionChange, handleFiltersQueryChange, handleFiltersClearAll
-    } = useProductlists();
+    } = useContext(ProductContext);
 
     const isHeaderCheckboxSelected = allResourcesSelected || selectedResources.length > 0;
 
@@ -72,7 +73,7 @@ export default function Products() {
                         <div style={spinnerCss}>
                             <Spinner accessibilityLabel="Loading products" size="large" />
                         </div>
-                    ) : (
+                    ) : paginatedProducts?.length > 0 ? (
                         <>
                             <IndexTable
                                 resourceName={resourceName}
@@ -87,6 +88,7 @@ export default function Products() {
                                     onNext: handleNextPage,
                                     onPrevious: handlePreviousPage,
                                 }}
+                                emptyState={null}
                             >
                                 {rowMarkup.map((rowMarkup, index) => {
                                     return React.cloneElement(rowMarkup, {
@@ -106,6 +108,10 @@ export default function Products() {
                                 />
                             </div>
                         </>
+                    ) : (
+                        <div style={spinnerCss}>
+                            <Spinner accessibilityLabel="Loading products" size="large" />
+                        </div>
                     )}
                 </LegacyCard>
             </Frame>

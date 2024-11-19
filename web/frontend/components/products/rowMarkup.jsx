@@ -91,11 +91,7 @@ export default function RowMarkup({ product, domain, index, inventory, selected,
             </IndexTable.Row>
             <tr>
                 <td colSpan="6">
-                    <Update
-                        open={open}
-                        product={product}
-                        handleToggle={handleToggle}
-                    />
+                    <Update open={open} product={product} handleToggle={handleToggle} />
                 </td>
             </tr>
         </>

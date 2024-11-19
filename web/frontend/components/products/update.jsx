@@ -50,11 +50,7 @@ export default function Update({ open, product, handleToggle }) {
                 <Collapsible open={open} id="basic-collapsible" transition={{ duration: '500ms', timingFunction: 'ease-in-out' }} expandOnPrint>
                     <div style={collapsibleFormCss}>
                         <LegacyCard sectioned>
-                            <ProductForm
-                                product={product}
-                                onSubmit={handleSubmit}
-                                onCancel={handleToggle}
-                            />
+                            <ProductForm product={product} onSubmit={handleSubmit} onCancel={handleToggle} />
                         </LegacyCard>
                     </div>
                 </Collapsible>

@@ -23,16 +23,16 @@ export default function useFetchData(apiEndpoint) {
 
                 if(apiEndpoint === "/api/products") {
                     setData(data.products);
-                    console.log("Fetched products",data.products);
+                    console.log("Fetched products:", data.products);
                 } else if(apiEndpoint === "/api/collections") {
                     setData(data.body.data.collections.edges);
-                    console.log("Fetched collections",data.body.data.collections.edges);
+                    console.log("Fetched collections:", data.body.data.collections.edges);
                 } else if(apiEndpoint === "/api/inventorylevel") {
                     setData(data.data);
-                    console.log("Fetched inventory",data.data);
+                    console.log("Fetched inventory level:", data.data);
                 } else if(apiEndpoint === "/api/domain") {
                     setData(data.domain);
-                    console.log("Fetched domain",data.domain);
+                    console.log("Fetched domain:", data.domain);
                 }
             } catch (err) {
                 setError(err.message);

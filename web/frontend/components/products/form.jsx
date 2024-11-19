@@ -82,6 +82,7 @@ export default function ProductForm({ product, onSubmit, onCancel }) {
         } catch (error) {
             console.error('Error updating product:', error);
         } finally {
+            console.log('Product updated successfully', product);
             setLoading(false);
         }
     };
