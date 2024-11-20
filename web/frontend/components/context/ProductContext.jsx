@@ -23,7 +23,7 @@ export default function ProductProvider({ children }) {
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedGiftCard, setSelectedGiftCard] = useState(false);
     const [productStatus, setProductStatus] = useState([]);
-    
+
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const itemsPerPage = 50;
@@ -79,7 +79,7 @@ export default function ProductProvider({ children }) {
         if (selectedGiftCard) {
             filtered = filtered.filter((product) => product.node.giftCard === true);
         }
-    
+
         if (selected !== 0) {
             filtered = filtered.filter((product) => {
                 switch (selected) {
@@ -92,7 +92,7 @@ export default function ProductProvider({ children }) {
         }
 
         const [sortKey, sortDirection] = sortSelected[0].split(' ');
-    
+
         filtered = sortProducts(filtered, sortKey, sortDirection);
         setFilteredProducts(filtered);
     }, [selected, products, productStatus, sortSelected, taggedWith, selectedCategory, selectedGiftCard]);
@@ -117,7 +117,7 @@ export default function ProductProvider({ children }) {
     }, []);
 
     const handleSelectedGiftCardChange = useCallback((value) => {
-        setSelectedGiftCard(value[0] === "true");
+        setSelectedGiftCard(value.includes("true"));
     }, []);
 
     const handleProductStatusChange = useCallback(
@@ -213,7 +213,7 @@ export default function ProductProvider({ children }) {
             setFilteredProducts([]);
             return;
         }
-    
+
         switch (selectedTab) {
             case 1:
                 filtered = products.filter((product) => product.node.status === "ACTIVE");
@@ -227,7 +227,7 @@ export default function ProductProvider({ children }) {
             default:
                 break;
         }
-    
+
         setFilteredProducts(filtered);
     };
 
@@ -272,14 +272,14 @@ export default function ProductProvider({ children }) {
                 },
             ],
         }));
-    
+
         const getUniqueTags = (products) => {
             const allTags = products.reduce((acc, product) => {
                 return acc.concat(product.node.tags);
             }, []);
             return [...new Set(allTags)];
         };
-    
+
         const filters = [
         {
             key: "category",
@@ -306,10 +306,10 @@ export default function ProductProvider({ children }) {
                 <ChoiceList
                     title="Gift Card"
                     titleHidden
-                    choices={[{ label: "Gift Card", value: true }]}
-                    selected={selectedGiftCard ? [true] : []}
+                    choices={[{ label: "Gift Card", value: "true" }]}
+                    selected={selectedGiftCard ? ["true"] : []}
                     onChange={handleSelectedGiftCardChange}
-                    allowMultiple
+                    allowMultiple={false}
                 />
             ),
             shortcut: true,
@@ -377,7 +377,11 @@ export default function ProductProvider({ children }) {
         case 'productStatus':
             return `Product Status: ${productStatus.join(", ")}`;
         case 'taggedWith':
-            return `Tagged With: ${value.join(", ")}`;
+            return `Tagged With: ${taggedWith.join(", ")}`;
+        case 'category':
+            return `Category: ${selectedCategory.join(", ")}`;
+        case 'giftCard':
+            return `Gift Card: ${selectedGiftCard.join(", ")}`;
         default:
             return value;
         }
@@ -406,6 +410,22 @@ export default function ProductProvider({ children }) {
             key,
             label: disambiguateLabel(key, taggedWith),
             onRemove: handleTaggedWithRemove,
+        });
+    }
+    if (selectedCategory?.length && !isEmpty(selectedCategory)) {
+        const key = "category";
+        appliedFilters.push({
+            key,
+            label: disambiguateLabel(key, selectedCategory),
+            onRemove: handleSelectedCategory,
+        });
+    }
+    if (selectedGiftCard?.length && !isEmpty(selectedGiftCard)) {
+        const key = "giftCard";
+        appliedFilters.push({
+            key,
+            label: disambiguateLabel(key, selectedGiftCard),
+            onRemove: handleSelectedGiftCard,
         });
     }
 
