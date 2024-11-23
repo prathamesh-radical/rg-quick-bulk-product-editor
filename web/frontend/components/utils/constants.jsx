@@ -71,8 +71,3 @@ export const paginatedButtonCss = {
     borderBottomLeftRadius: "8px",
     borderBottomRightRadius: "8px",
 };
-
-export const collapsibleFormCss = {
-    marginTop: '1rem',
-    width: '72rem'
-};

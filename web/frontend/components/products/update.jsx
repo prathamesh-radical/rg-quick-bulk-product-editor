@@ -1,6 +1,6 @@
 import { Collapsible, LegacyCard, LegacyStack, Toast } from '@shopify/polaris';
 import { useCallback, useState } from 'react';
-import { btn, collapsibleFormCss } from '../utils/constants.jsx';
+import { btn } from '../utils/constants.jsx';
 import ProductForm from './form.jsx';
 import './style.css';
 
@@ -48,7 +48,7 @@ export default function Update({ open, product, handleToggle }) {
         <div style={btn}>
             <LegacyStack>
                 <Collapsible open={open} id="basic-collapsible" transition={{ duration: '500ms', timingFunction: 'ease-in-out' }} expandOnPrint>
-                    <div style={collapsibleFormCss}>
+                    <div style={{ marginTop: '1rem' }}>
                         <LegacyCard sectioned>
                             <ProductForm product={product} onSubmit={handleSubmit} onCancel={handleToggle} />
                         </LegacyCard>

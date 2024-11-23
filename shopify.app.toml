@@ -3,7 +3,7 @@
 client_id = "d3e078004acc95fe018f6db932904d58"
 name = "rg-products-quick-editor"
 handle = "rg-products-quick-editor"
-application_url = "https://although-compare-scared-de.trycloudflare.com"
+application_url = "https://kazakhstan-bulletin-seq-declined.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_inventory,read_locations,read_orders,read_products,write_inventor
 
 [auth]
 redirect_urls = [
-  "https://although-compare-scared-de.trycloudflare.com/auth/callback",
-  "https://although-compare-scared-de.trycloudflare.com/auth/shopify/callback",
-  "https://although-compare-scared-de.trycloudflare.com/api/auth/callback"
+  "https://kazakhstan-bulletin-seq-declined.trycloudflare.com/auth/callback",
+  "https://kazakhstan-bulletin-seq-declined.trycloudflare.com/auth/shopify/callback",
+  "https://kazakhstan-bulletin-seq-declined.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
