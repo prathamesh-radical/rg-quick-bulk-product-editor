@@ -68,3 +68,7 @@
 #previousURL:hover, #nextURL:hover {
     background-color: #D4D4D4;
 }
+.Polaris-Frame-Toast {
+    position: relative;
+    bottom: 3rem;
+}

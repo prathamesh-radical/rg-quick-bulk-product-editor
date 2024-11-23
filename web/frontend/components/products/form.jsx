@@ -71,10 +71,6 @@ export default function ProductForm({ product, onSubmit, onCancel }) {
                         sku: formData.sku,
                         compare_at_price: parseFloat(formData.price) || 0,
                     }],
-                    collections: selectedCollectionIds.map(id => ({
-                        id,
-                        title: collections.find(collection => collection.node.id === id)?.node.title,
-                    })),
                     tags: formData.tags.split(',').map(tag => tag.trim()),
                     status: inputStatusValue.toLowerCase(),
                 }
