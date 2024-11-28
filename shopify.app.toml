@@ -1,9 +1,9 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "d3e078004acc95fe018f6db932904d58"
-name = "rg-products-quick-editor"
-handle = "rg-products-quick-editor"
-application_url = "https://oklahoma-sporting-requires-deaf.trycloudflare.com"
+name = "rg-quick-bulk-product-editor"
+handle = "rg-quick-bulk-product-editor"
+application_url = "https://small-zope-prefix-illinois.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_inventory,read_locations,read_orders,read_products,write_inventor
 
 [auth]
 redirect_urls = [
-  "https://oklahoma-sporting-requires-deaf.trycloudflare.com/auth/callback",
-  "https://oklahoma-sporting-requires-deaf.trycloudflare.com/auth/shopify/callback",
-  "https://oklahoma-sporting-requires-deaf.trycloudflare.com/api/auth/callback"
+  "https://small-zope-prefix-illinois.trycloudflare.com/auth/callback",
+  "https://small-zope-prefix-illinois.trycloudflare.com/auth/shopify/callback",
+  "https://small-zope-prefix-illinois.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

@@ -436,6 +436,7 @@ export default function ProductProvider({ children }) {
             index={index}
             domain={fetchedShop}
             inventory={fetchedInventory}
+            collections={fetchedCollections}
             selected={selectedResources.includes(product.id)}
             onSelect={() => handleSelectionChange(product.id)}
         />

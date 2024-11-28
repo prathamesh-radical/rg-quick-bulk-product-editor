@@ -4,17 +4,13 @@ import React, { useCallback, useState } from "react";
 import './style.css';
 import Update from "./update.jsx";
 
-export default function RowMarkup({ product, domain, index, inventory, selected, onSelect }) {
+export default function RowMarkup({ product, domain, index, collections, selected, onSelect }) {
     const [open, setOpen] = useState(false);
 
     const title = product?.title || "-";
     const status = product?.status || "-";
     const variant = product?.variants?.edges?.[0]?.node;
-    const id = variant?.inventoryItem?.id?.split("/").pop().trim() || 0;
-    const productInventory = inventory.find(
-        item => item.inventory_item_id.toString().trim() === id
-    );
-    const stock = productInventory?.available ?? "out of stock";
+    const stock = variant.inventoryQuantity || 0;
     const price = variant?.price || "-";
     const collection = product?.collections?.edges
         ?.map((collect) => collect.node.title)
@@ -90,8 +86,8 @@ export default function RowMarkup({ product, domain, index, inventory, selected,
                 <IndexTable.Cell>{collection}</IndexTable.Cell>
             </IndexTable.Row>
             <tr>
-                <td colSpan="6">
-                    <Update open={open} product={product} handleToggle={handleToggle} />
+                <td colSpan="7">
+                    <Update open={open} product={product} collections={collections} handleToggle={handleToggle} />
                 </td>
             </tr>
         </>

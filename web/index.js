@@ -227,29 +227,109 @@ app.get('/api/inventorylevel', async (req, res) => {
 
 app.put('/api/inventorylevel/:id', async (req, res) => {
   const inventoryItemId = req.params.id;
-  const { available, locationId } = req.body;
+  const { available, locationId = "83114426690" } = req.body;  // Include default locationId
 
-  const client = new shopify.api.clients.Rest({
-      session: res.locals.shopify.session,
-  });
+  if (!inventoryItemId || available === undefined) {
+      return res.status(400).json({ 
+          error: 'Missing required fields',
+          details: { inventoryItemId, locationId, available }
+      });
+  }
 
   try {
-      const updatedInventoryLevel = await client.put({
-          path: 'inventory_levels/set',
-          data: {
-              inventory_item_id: inventoryItemId,
-              available: available,
-              location_id: locationId,
-          },
-          type: 'application/json',
+      const client = new shopify.api.clients.Rest({
+          session: res.locals.shopify.session,
       });
-      res.status(200).send(updatedInventoryLevel);
+
+      // First, try to set the inventory level
+      const response = await client.post({
+          path: 'inventory_levels/set.json',
+          data: {
+              location_id: locationId,
+              inventory_item_id: inventoryItemId,
+              available: parseInt(available)
+          },
+      });
+
+      res.status(200).json({
+          success: true,
+          data: response.body,
+          message: 'Inventory updated successfully'
+      });
+
   } catch (error) {
-      console.error('Error updating inventory level:', error);
-      res.status(400).send({ error: error.message });
+      console.error('Inventory update error:', error.response?.body || error);
+      res.status(500).json({
+          success: false,
+          error: 'Failed to update inventory',
+          details: error.response?.body || error.message
+      });
   }
 });
 
+// In server.js, update the product-collections endpoint
+// In server.js, update the product-collections endpoint
+app.put('/api/product-collections/:id', async (req, res) => {
+  const productId = req.params.id;
+  const { collections } = req.body; // Can be an empty array
+  const session = res.locals.shopify.session;
+
+  try {
+      const client = new shopify.api.clients.Rest({ session });
+
+      // Get current collects
+      const currentCollects = await client.get({
+          path: 'collects',
+          query: { product_id: productId },
+      });
+
+      // Delete all existing collects
+      const deletePromises = currentCollects.body.collects.map(collect =>
+          client.delete({ path: `collects/${collect.id}` })
+      );
+      await Promise.all(deletePromises);
+
+      // If collections array is empty, all collects are removed
+      if (collections && collections.length === 0) {
+          return res.status(200).json({
+              success: true,
+              message: 'All collections removed from the product.',
+          });
+      }
+
+      // Create new collects for provided collections
+      const createPromises = collections.map(collectionId => {
+          const cleanCollectionId = collectionId.split('/').pop();
+          return client.post({
+              path: 'collects',
+              data: {
+                  collect: {
+                      product_id: productId,
+                      collection_id: cleanCollectionId,
+                  },
+              },
+          });
+      });
+      const results = await Promise.all(createPromises);
+
+      res.status(200).json({
+          success: true,
+          message: 'Collections updated successfully.',
+          results,
+      });
+  } catch (error) {
+      console.error('Error updating collections:', error);
+      res.status(500).json({
+          success: false,
+          error: error.message || 'Failed to update collections',
+          details: error.response?.body || error,
+      });
+  }
+});
+
+
+// The ProductForm component remains the same as in the previous solution
+// The Update component remains the same as in the previous solution
 app.put('/api/products/:id', async (req, res) => {
   const productId = req.params.id;
   const { product } = req.body;
